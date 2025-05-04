@@ -157,6 +157,7 @@ if __name__ == "__main__":
         "--use_sam_hq", action="store_true", help="using sam-hq for prediction"
     )
     parser.add_argument("--input_image", type=str, required=True, help="path to image file")
+    parser.add_argument("--input_depth", type=str, required=False, help="path to depth file")
     parser.add_argument("--text_prompt", type=str, required=True, help="text prompt")
     parser.add_argument(
         "--output_dir", "-o", type=str, default="outputs", required=True, help="output directory"
@@ -240,4 +241,5 @@ if __name__ == "__main__":
         bbox_inches="tight", dpi=300, pad_inches=0.0
     )
 
+    print(masks.shape)
     save_mask_data(output_dir, masks, boxes_filt, pred_phrases)
