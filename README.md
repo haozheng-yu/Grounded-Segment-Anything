@@ -48,7 +48,7 @@ You should set the environment variable manually as follows if you want to build
 ```bash
 export AM_I_DOCKER=False
 export BUILD_WITH_CUDA=True
-export CUDA_HOME=/path/to/cuda-11.3/
+export CUDA_HOME=/path/to/cuda-12.1/
 ```
 
 Create environment on G2:
