@@ -241,5 +241,4 @@ if __name__ == "__main__":
         bbox_inches="tight", dpi=300, pad_inches=0.0
     )
 
-    print(masks.shape)
     save_mask_data(output_dir, masks, boxes_filt, pred_phrases)
