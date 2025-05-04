@@ -54,7 +54,7 @@ export CUDA_HOME=/path/to/cuda-12.1/
 Create environment on G2:
 
 ```bash
-conda create -n grounded-sam python=3.10
+conda create -n groundedsam python=3.10
 ```
 
 Install CUDA and Pytorch. Remember to change the cuda path to your own path. 
