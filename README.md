@@ -89,20 +89,6 @@ pip install --no-build-isolation -e GroundingDINO
 ```
 
 
-Install diffusers:
-
-```bash
-pip install --upgrade diffusers[torch]
-```
-
-Install RAM & Tag2Text:
-
-```bash
-git clone https://github.com/xinyu1205/recognize-anything.git
-pip install -r ./recognize-anything/requirements.txt
-pip install -e ./recognize-anything/
-```
-
 The following optional dependencies are necessary for mask post-processing, saving masks in COCO format, the example notebooks, and exporting the model in ONNX format. `jupyter` is also required to run the example notebooks.
 
 ```
