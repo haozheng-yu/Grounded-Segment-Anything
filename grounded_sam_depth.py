@@ -157,7 +157,7 @@ if __name__ == "__main__":
         "--use_sam_hq", action="store_true", help="using sam-hq for prediction"
     )
     parser.add_argument("--input_image", type=str, required=True, help="path to image file")
-    parser.add_argument("--input_depth", type=str, required=False, help="path to depth file")
+    parser.add_argument("--input_depth", type=str, required=True, help="path to depth file")
     parser.add_argument("--text_prompt", type=str, required=True, help="text prompt")
     parser.add_argument(
         "--output_dir", "-o", type=str, default="outputs", required=True, help="output directory"
@@ -178,6 +178,7 @@ if __name__ == "__main__":
     sam_hq_checkpoint = args.sam_hq_checkpoint
     use_sam_hq = args.use_sam_hq
     image_path = args.input_image
+    depth_path = args.input_depth
     text_prompt = args.text_prompt
     output_dir = args.output_dir
     box_threshold = args.box_threshold
