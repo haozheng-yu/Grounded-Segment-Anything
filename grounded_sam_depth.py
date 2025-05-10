@@ -44,8 +44,8 @@ def load_image(image_path):
     return image_pil, image
 
 def load_depth_image(depth_path):
-    depth_pil = Image.open(depth_path).convert("L")  # load as grayscale
-    depth_np = np.array(depth_pil)
+    depth_pil = Image.open(depth_path)
+    depth_np = np.array(depth_pil, dtype=np.int64)
     return depth_pil, depth_np
 
 def apply_mask_to_image(image, mask):
@@ -203,6 +203,9 @@ if __name__ == "__main__":
     # load image
     image_pil, image = load_image(image_path)
     depth_pil, depth_np = load_depth_image(depth_path)
+    print(depth_np.shape)
+    print(depth_np)
+    print(depth_pil.mode)
     # load model
     model = load_model(config_file, grounded_checkpoint, bert_base_uncased_path, device=device)
 
@@ -274,14 +277,5 @@ if __name__ == "__main__":
     )
 
     # Save masked depth image
-    plt.figure(figsize=(10, 10))
-    plt.imshow(masked_depth, cmap='viridis')  # Using viridis colormap for depth visualization
-    plt.axis('off')
-    plt.savefig(
-        os.path.join(output_dir, "masked_depth.jpg"),
-        bbox_inches="tight", dpi=300, pad_inches=0.0
-    )
-
-    cv2.imwrite(os.path.join(output_dir, "masked_depth_raw.jpg"), masked_depth)
-
+    Image.fromarray(depth_np.astype(np.uint16)).save(os.path.join(output_dir, "masked_depth.png"))
     save_mask_data(output_dir, masks, boxes_filt, pred_phrases)
