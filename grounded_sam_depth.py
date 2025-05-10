@@ -43,6 +43,18 @@ def load_image(image_path):
     image, _ = transform(image_pil, None)  # 3, h, w
     return image_pil, image
 
+def load_depth_image(depth_path):
+    depth_pil = Image.open(depth_path).convert("L")  # load as grayscale
+    depth_np = np.array(depth_pil)
+    return depth_pil, depth_np
+
+def apply_mask_to_image(image, mask):
+    if len(image.shape) == 2:
+        return image * mask.squeeze(0)
+    else:
+        return image * mask.squeeze(0)[:, :, None]
+
+
 
 def load_model(model_config_path, model_checkpoint_path, bert_base_uncased_path, device):
     args = SLConfig.fromfile(model_config_path)
@@ -190,6 +202,7 @@ if __name__ == "__main__":
     os.makedirs(output_dir, exist_ok=True)
     # load image
     image_pil, image = load_image(image_path)
+    depth_pil, depth_np = load_depth_image(depth_path)
     # load model
     model = load_model(config_file, grounded_checkpoint, bert_base_uncased_path, device=device)
 
@@ -228,6 +241,15 @@ if __name__ == "__main__":
     )
 
 
+    masks_np = masks.cpu().numpy()
+    combined_mask = np.zeros(masks_np.shape[1:], dtype=bool)
+    for mask in masks_np:
+        combined_mask = combined_mask | mask[0]
+
+    masked_image = apply_mask_to_image(image, combined_mask)
+    masked_depth = apply_mask_to_image(depth_np, combined_mask)
+
+
     # draw output image
     plt.figure(figsize=(10, 10))
     plt.imshow(image)
@@ -241,5 +263,25 @@ if __name__ == "__main__":
         os.path.join(output_dir, "grounded_sam_output.jpg"),
         bbox_inches="tight", dpi=300, pad_inches=0.0
     )
+
+    # Save masked RGB image
+    plt.figure(figsize=(10, 10))
+    plt.imshow(masked_image)
+    plt.axis('off')
+    plt.savefig(
+        os.path.join(output_dir, "masked_rgb.jpg"),
+        bbox_inches="tight", dpi=300, pad_inches=0.0
+    )
+
+    # Save masked depth image
+    plt.figure(figsize=(10, 10))
+    plt.imshow(masked_depth, cmap='viridis')  # Using viridis colormap for depth visualization
+    plt.axis('off')
+    plt.savefig(
+        os.path.join(output_dir, "masked_depth.jpg"),
+        bbox_inches="tight", dpi=300, pad_inches=0.0
+    )
+
+    cv2.imwrite(os.path.join(output_dir, "masked_depth_raw.jpg"), masked_depth)
 
     save_mask_data(output_dir, masks, boxes_filt, pred_phrases)
