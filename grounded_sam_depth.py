@@ -203,9 +203,6 @@ if __name__ == "__main__":
     # load image
     image_pil, image = load_image(image_path)
     depth_pil, depth_np = load_depth_image(depth_path)
-    print(depth_np.shape)
-    print(depth_np)
-    print(depth_pil.mode)
     # load model
     model = load_model(config_file, grounded_checkpoint, bert_base_uncased_path, device=device)
 
